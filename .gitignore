@@ -1,0 +1,25 @@
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Dependencies
+node_modules/
+
+# Generated artifacts (local working files)
+generated_images/
+temporary screenshots/
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Editor
+.vscode/
+.idea/
+
+# Claude Code local state
+.claude/
+
+# Reference assets (move into brand_assets/ if needed)
+www.hostinger.com_*.png
