@@ -755,6 +755,140 @@
     ::-webkit-scrollbar-track { background: var(--bg); }
     ::-webkit-scrollbar-thumb { background: rgba(198,165,89,0.2); border-radius: 5px; }
     ::-webkit-scrollbar-thumb:hover { background: rgba(198,165,89,0.4); }
+
+    /* ════════════════════════════════════════════════════════════════
+       RESPONSIVE: Mobile nav (hamburger + overlay menu)
+       ════════════════════════════════════════════════════════════════ */
+    .nav-toggle {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: transparent;
+      border: 1px solid var(--border-strong);
+      color: var(--text);
+      cursor: pointer;
+      transition: background .25s var(--spring), border-color .25s, transform .2s;
+      padding: 0;
+    }
+    .nav-toggle:hover { background: rgba(230,185,121,0.08); }
+    .nav-toggle:active { transform: scale(0.96); }
+    .nav-toggle:focus-visible { box-shadow: 0 0 0 1.5px var(--pg-ring), 0 0 0 4px rgba(230,185,121,0.45); outline: none; }
+    .nav-toggle svg { width: 20px; height: 20px; display: block; }
+    .nav-toggle .ic-close { display: none; }
+    .nav-toggle[aria-expanded="true"] .ic-open { display: none; }
+    .nav-toggle[aria-expanded="true"] .ic-close { display: block; }
+    @media (min-width: 992px) { .nav-toggle { display: none; } }
+
+    /* Inline Sign-in / Get-Started buttons live in the desktop nav only; mobile menu has its own copies */
+    .nav-desktop-only { display: none; }
+    @media (min-width: 992px) { .nav-desktop-only { display: inline-flex; } }
+
+    .mobile-menu {
+      position: fixed;
+      top: 72px;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 90;
+      background: rgba(10, 8, 5, 0.92);
+      backdrop-filter: blur(18px) saturate(140%);
+      -webkit-backdrop-filter: blur(18px) saturate(140%);
+      border-top: 1px solid var(--border);
+      padding: 24px;
+      overflow-y: auto;
+      opacity: 0;
+      transform: translateY(-8px);
+      pointer-events: none;
+      transition: opacity .35s var(--spring), transform .35s var(--spring);
+    }
+    html:not(.dark) .mobile-menu { background: rgba(243, 237, 225, 0.94); }
+    body.menu-open .mobile-menu {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+    body.menu-open { overflow: hidden; }
+    .mobile-menu[hidden] { display: none; }
+    @media (min-width: 992px) { .mobile-menu { display: none; } }
+
+    .mobile-menu nav {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+    .mobile-menu nav a {
+      display: flex;
+      align-items: center;
+      min-height: 56px;
+      padding: 0 18px;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text);
+      border-radius: 14px;
+      transition: background .2s var(--spring), color .2s;
+    }
+    .mobile-menu nav a:hover { background: rgba(230,185,121,0.08); color: var(--gold-2); }
+    .mobile-menu .mm-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 16px 0;
+    }
+    .mobile-menu .mm-cta {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-width: 480px;
+      margin: 24px auto 0;
+    }
+    .mobile-menu .mm-cta .btn { width: 100%; justify-content: center; }
+
+    /* ════════════════════════════════════════════════════════════════
+       RESPONSIVE: Grid fixes for mobile breakpoints
+       ════════════════════════════════════════════════════════════════ */
+    /* Stats — collapse 3-col to 1-col on phones */
+    @media (max-width: 640px) {
+      .stats { grid-template-columns: 1fr; gap: 24px; }
+    }
+
+    /* Test-preview rows — name wraps to its own row, bar+time share row 2 */
+    @media (max-width: 560px) {
+      .test-preview .row {
+        grid-template-columns: 1fr auto;
+        grid-template-rows: auto auto;
+        row-gap: 8px;
+      }
+      .test-preview .row .name { grid-column: 1 / -1; }
+    }
+
+    /* Recipe grid — 2-col is too tight on small phones */
+    @media (max-width: 480px) {
+      .template-grid { grid-template-columns: 1fr; }
+    }
+
+    /* Footer — add 2-col intermediate state before jumping to 5-col */
+    @media (min-width: 640px) and (max-width: 991px) {
+      .foot-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    /* Band padding relief on phones */
+    @media (max-width: 560px) {
+      .transform-band { padding: 56px 20px; }
+      .templates-band { padding: 48px 20px; }
+    }
+
+    /* ════════════════════════════════════════════════════════════════
+       RESPONSIVE: Touch targets ≥44px on mobile
+       ════════════════════════════════════════════════════════════════ */
+    @media (max-width: 768px) {
+      .theme-toggle { width: 44px; height: 44px; }
+      .btn-sm { padding: 12px 18px; }
+      .prompt-row .attach { padding: 10px 14px; }
+    }
   </style>
 </head>
 <body>
@@ -791,8 +925,8 @@
         <a href="#changelog">Changelog</a>
       </nav>
       <div style="display:flex; align-items:center; gap:10px;">
-        <a href="#" style="font-size:13px; color:var(--text-dim); font-weight:600; padding:10px 14px;">Sign in</a>
-        <a href="#" class="btn btn-gold btn-sm">Get Started</a>
+        <a href="#" class="nav-desktop-only" style="font-size:13px; color:var(--text-dim); font-weight:600; padding:10px 14px;">Sign in</a>
+        <a href="#" class="btn btn-gold btn-sm nav-desktop-only">Get Started</a>
         <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle theme" aria-pressed="true">
           <!-- icon swapped by JS; Sun by default (dark mode active) -->
           <svg id="theme-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -807,9 +941,36 @@
             <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
           </svg>
         </button>
+        <button id="nav-toggle" class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
+          <svg class="ic-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+            <line x1="4" y1="7" x2="20" y2="7"/>
+            <line x1="4" y1="12" x2="20" y2="12"/>
+            <line x1="4" y1="17" x2="20" y2="17"/>
+          </svg>
+          <svg class="ic-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+            <line x1="6" y1="6" x2="18" y2="18"/>
+            <line x1="6" y1="18" x2="18" y2="6"/>
+          </svg>
+        </button>
       </div>
     </div>
   </header>
+
+  <!-- Mobile menu (shown on screens < 992px) -->
+  <div id="mobile-menu" class="mobile-menu" hidden>
+    <nav aria-label="Mobile">
+      <a href="#features">Features</a>
+      <a href="#recipes">Recipes</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#docs">Docs</a>
+      <a href="#changelog">Changelog</a>
+    </nav>
+    <div class="mm-divider"></div>
+    <div class="mm-cta">
+      <a href="#" class="btn">Sign in</a>
+      <a href="#" class="btn btn-gold">Get Started</a>
+    </div>
+  </div>
 
   <!-- HERO -->
   <section class="hero">
@@ -1602,6 +1763,51 @@
             phase = 'idle';
           }, DURATION + 60);
         }, DURATION);
+      });
+    })();
+
+    // ── Mobile nav toggle ──────────────────────────────────────────────────────
+    (function () {
+      const toggle = document.getElementById('nav-toggle');
+      const menu = document.getElementById('mobile-menu');
+      if (!toggle || !menu) return;
+
+      function setOpen(open) {
+        toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+        toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+        if (open) {
+          menu.removeAttribute('hidden');
+          document.body.classList.add('menu-open');
+        } else {
+          document.body.classList.remove('menu-open');
+          setTimeout(function () {
+            if (toggle.getAttribute('aria-expanded') === 'false') menu.setAttribute('hidden', '');
+          }, 350);
+        }
+      }
+
+      toggle.addEventListener('click', function () {
+        const isOpen = toggle.getAttribute('aria-expanded') === 'true';
+        setOpen(!isOpen);
+      });
+
+      menu.addEventListener('click', function (e) {
+        const link = e.target.closest('a');
+        if (link) setOpen(false);
+      });
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') {
+          setOpen(false);
+          toggle.focus();
+        }
+      });
+
+      // Auto-close menu when resizing up to desktop
+      window.addEventListener('resize', function () {
+        if (window.innerWidth >= 992 && toggle.getAttribute('aria-expanded') === 'true') {
+          setOpen(false);
+        }
       });
     })();
   </script>
